@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Abdallah — Database Administrator &amp; Data Engineer</title>
+<meta name="description" content="Portfolio of Abdallah — Database Administrator and aspiring Data Engineer. SQL Server, ETL, data modeling, and reliable database systems.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;450;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#0E1420;
+    --panel:#151E2E;
+    --panel-2:#1B2537;
+    --line:#27344A;
+    --line-soft:#1F2B3E;
+    --key:#E8B24C;        /* primary-key gold — the accent, used sparingly */
+    --relation:#4FD1C5;   /* relation / foreign-key teal */
+    --text:#E6EAF2;
+    --muted:#8B98AE;
+    --muted-2:#5F6C82;
+    --radius:10px;
+    --maxw:1080px;
+  }
+
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{
+    background:var(--ink);
+    color:var(--text);
+    font-family:'Inter',system-ui,sans-serif;
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+  }
+  ::selection{background:var(--key);color:var(--ink)}
+
+  a{color:inherit;text-decoration:none}
+  .mono{font-family:'JetBrains Mono',monospace}
+
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 24px}
+
+  /* faint blueprint grid over the whole page */
+  body::before{
+    content:"";
+    position:fixed;inset:0;
+    background-image:
+      linear-gradient(var(--line-soft) 1px,transparent 1px),
+      linear-gradient(90deg,var(--line-soft) 1px,transparent 1px);
+    background-size:44px 44px;
+    opacity:.35;
+    pointer-events:none;
+    z-index:0;
+    mask-image:radial-gradient(circle at 50% 30%,#000 0%,transparent 78%);
+  }
+  main,nav{position:relative;z-index:1}
+
+  /* ---------- NAV ---------- */
+  nav{
+    position:sticky;top:0;z-index:50;
+    background:rgba(14,20,32,.82);
+    backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--line-soft);
+  }
+  .nav-inner{
+    max-width:var(--maxw);margin:0 auto;padding:14px 24px;
+    display:flex;align-items:center;justify-content:space-between;
+  }
+  .brand{font-family:'Space Grotesk';font-weight:700;letter-spacing:.5px;font-size:15px}
+  .brand .dot{color:var(--key)}
+  .nav-links{display:flex;gap:26px;font-size:13.5px;color:var(--muted);font-weight:500}
+  .nav-links a{transition:color .2s}
+  .nav-links a:hover{color:var(--text)}
+  @media(max-width:640px){.nav-links{display:none}}
+
+  /* ---------- HERO ---------- */
+  header.hero{padding:96px 0 72px}
+  .eyebrow{
+    font-family:'JetBrains Mono';font-size:12.5px;color:var(--relation);
+    letter-spacing:1px;margin-bottom:22px;
+  }
+  .eyebrow .cmt{color:var(--muted-2)}
+  h1{
+    font-family:'Space Grotesk';font-weight:700;
+    font-size:clamp(38px,7vw,68px);line-height:1.02;letter-spacing:-1px;
+    margin-bottom:18px;
+  }
+  h1 .accent{color:var(--key)}
+  .hero-sub{font-size:clamp(17px,2.2vw,20px);color:var(--muted);max-width:560px;margin-bottom:34px}
+  .hero-sub strong{color:var(--text);font-weight:600}
+
+  .cta-row{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:52px}
+  .btn{
+    font-family:'Space Grotesk';font-weight:600;font-size:14px;
+    padding:12px 22px;border-radius:8px;transition:transform .15s,background .2s,border-color .2s;
+    display:inline-flex;align-items:center;gap:8px;
+  }
+  .btn-primary{background:var(--key);color:var(--ink)}
+  .btn-primary:hover{transform:translateY(-2px)}
+  .btn-ghost{border:1px solid var(--line);color:var(--text)}
+  .btn-ghost:hover{border-color:var(--relation);color:var(--relation)}
+
+  /* SELECT-statement card — the signature element */
+  .query-card{
+    background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);
+    overflow:hidden;max-width:620px;
+    box-shadow:0 24px 60px -30px rgba(0,0,0,.7);
+  }
+  .query-head{
+    display:flex;align-items:center;gap:8px;
+    padding:11px 16px;border-bottom:1px solid var(--line-soft);
+    background:var(--panel-2);
+  }
+  .query-head .d{width:11px;height:11px;border-radius:50%;background:var(--line)}
+  .query-head .d.k{background:var(--key)}
+  .query-head .d.r{background:var(--relation)}
+  .query-head span{margin-left:auto;font-family:'JetBrains Mono';font-size:12px;color:var(--muted-2)}
+  .query-body{padding:20px 20px;font-family:'JetBrains Mono';font-size:13.5px;line-height:1.85;overflow-x:auto}
+  .kw{color:var(--relation)}
+  .fn{color:var(--key)}
+  .str{color:#9DE6A0}
+  .cm{color:var(--muted-2)}
+  .query-body .row{color:var(--muted)}
+  .result{
+    margin-top:14px;padding-top:14px;border-top:1px dashed var(--line);
+    font-size:12.5px;color:var(--text);
+  }
+  .result b{color:var(--key);font-weight:600}
+
+  /* ---------- SECTION SCAFFOLD ---------- */
+  section{padding:60px 0;border-top:1px solid var(--line-soft)}
+  .sec-label{
+    font-family:'JetBrains Mono';font-size:12.5px;color:var(--muted-2);
+    letter-spacing:1px;margin-bottom:10px;
+  }
+  .sec-label .n{color:var(--relation)}
+  h2{font-family:'Space Grotesk';font-weight:700;font-size:clamp(26px,4vw,36px);letter-spacing:-.5px;margin-bottom:28px}
+
+  /* ---------- ABOUT ---------- */
+  .about-grid{display:grid;grid-template-columns:1.5fr 1fr;gap:40px;align-items:start}
+  @media(max-width:760px){.about-grid{grid-template-columns:1fr;gap:28px}}
+  .about-grid p{color:var(--muted);font-size:16px;margin-bottom:16px}
+  .about-grid p strong{color:var(--text);font-weight:600}
+  .facts{border:1px solid var(--line);border-radius:var(--radius);background:var(--panel);overflow:hidden}
+  .fact{display:flex;justify-content:space-between;gap:12px;padding:13px 18px;border-bottom:1px solid var(--line-soft);font-size:13.5px}
+  .fact:last-child{border-bottom:0}
+  .fact .k{font-family:'JetBrains Mono';color:var(--muted);font-size:12.5px}
+  .fact .v{color:var(--text);font-weight:500;text-align:right}
+
+  /* ---------- SKILLS (schema tables) ---------- */
+  .skills-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+  @media(max-width:820px){.skills-grid{grid-template-columns:1fr 1fr}}
+  @media(max-width:520px){.skills-grid{grid-template-columns:1fr}}
+  .skill-table{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden}
+  .skill-head{
+    display:flex;align-items:center;gap:8px;padding:11px 15px;
+    background:var(--panel-2);border-bottom:1px solid var(--line-soft);
+    font-family:'JetBrains Mono';font-size:13px;font-weight:500;
+  }
+  .skill-head .ico{color:var(--relation)}
+  .skill-body{padding:6px 0}
+  .skill-row{
+    display:flex;align-items:center;gap:9px;padding:8px 16px;font-size:13.5px;color:var(--muted);
+    border-bottom:1px solid var(--line-soft);
+  }
+  .skill-row:last-child{border-bottom:0}
+  .skill-row .pk{font-family:'JetBrains Mono';font-size:10px;color:var(--key);border:1px solid var(--key);border-radius:4px;padding:1px 5px;opacity:.85}
+  .skill-row .fk{font-family:'JetBrains Mono';font-size:10px;color:var(--relation);border:1px solid var(--relation);border-radius:4px;padding:1px 5px;opacity:.85}
+
+  /* ---------- PROJECTS ---------- */
+  .proj{
+    background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);
+    overflow:hidden;margin-bottom:22px;transition:border-color .25s,transform .25s;
+  }
+  .proj:hover{border-color:var(--relation);transform:translateY(-3px)}
+  .proj-head{
+    display:flex;align-items:center;gap:10px;padding:13px 20px;
+    background:var(--panel-2);border-bottom:1px solid var(--line-soft);
+    font-family:'JetBrains Mono';font-size:13.5px;
+  }
+  .proj-head .tbl{color:var(--key)}
+  .proj-head .badge{margin-left:auto;font-size:11px;color:var(--relation);border:1px solid var(--line);border-radius:20px;padding:3px 11px}
+  .proj-body{padding:22px 20px}
+  .proj-body h3{font-family:'Space Grotesk';font-size:20px;font-weight:600;margin-bottom:10px}
+  .proj-body p{color:var(--muted);font-size:15px;margin-bottom:18px}
+  .proj-meta{display:flex;gap:26px;flex-wrap:wrap;margin-bottom:18px}
+  .proj-meta .m .num{font-family:'Space Grotesk';font-size:22px;font-weight:700;color:var(--key)}
+  .proj-meta .m .lbl{font-family:'JetBrains Mono';font-size:11px;color:var(--muted-2);letter-spacing:.5px}
+  .tags{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
+  .tag{font-family:'JetBrains Mono';font-size:11.5px;color:var(--muted);background:var(--panel-2);border:1px solid var(--line-soft);border-radius:6px;padding:4px 10px}
+  .proj-links{display:flex;gap:18px;font-size:13.5px;font-weight:500}
+  .proj-links a{color:var(--relation);display:inline-flex;align-items:center;gap:6px;transition:opacity .2s}
+  .proj-links a:hover{opacity:.7}
+
+  /* ---------- CERTS ---------- */
+  .cert-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  @media(max-width:640px){.cert-grid{grid-template-columns:1fr}}
+  .cert{display:flex;align-items:center;gap:14px;padding:16px 18px;background:var(--panel);border:1px solid var(--line);border-radius:var(--radius)}
+  .cert .st{width:9px;height:9px;border-radius:50%;flex-shrink:0}
+  .cert .st.done{background:var(--relation)}
+  .cert .st.prog{background:var(--key)}
+  .cert .st.plan{background:var(--muted-2)}
+  .cert .txt{flex:1}
+  .cert .txt .name{font-weight:600;font-size:15px}
+  .cert .txt .desc{font-size:12.5px;color:var(--muted)}
+  .cert .state{font-family:'JetBrains Mono';font-size:11px;color:var(--muted-2)}
+
+  /* ---------- CONTACT ---------- */
+  .contact{text-align:center;padding:80px 0}
+  .contact h2{margin-bottom:14px}
+  .contact p{color:var(--muted);max-width:460px;margin:0 auto 30px;font-size:16px}
+  .contact-links{display:flex;gap:16px;justify-content:center;flex-wrap:wrap}
+
+  footer{border-top:1px solid var(--line-soft);padding:26px 0;text-align:center}
+  footer .mono{font-size:12px;color:var(--muted-2)}
+
+  /* reveal on scroll */
+  .reveal{opacity:0;transform:translateY(22px);transition:opacity .6s ease,transform .6s ease}
+  .reveal.in{opacity:1;transform:none}
+  @media(prefers-reduced-motion:reduce){
+    .reveal{opacity:1;transform:none;transition:none}
+    html{scroll-behavior:auto}
+    .btn-primary:hover,.proj:hover{transform:none}
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <div class="brand">abdallah<span class="dot">.</span>db</div>
+    <div class="nav-links">
+      <a href="#about">about</a>
+      <a href="#skills">skills</a>
+      <a href="#projects">projects</a>
+      <a href="#certs">certifications</a>
+      <a href="#contact">contact</a>
+    </div>
+  </div>
+</nav>
+
+<main>
+  <header class="hero">
+    <div class="wrap">
+      <div class="eyebrow"><span class="cmt">-- </span>Database Administrator &amp; aspiring Data Engineer</div>
+      <h1>Reliable data,<br>well-<span class="accent">structured</span>.</h1>
+      <p class="hero-sub">I'm <strong>Abdallah</strong>, a Computer Science graduate specializing in database administration — designing schemas, tuning queries, and building the systems that keep data trustworthy.</p>
+      <div class="cta-row">
+        <a href="#projects" class="btn btn-primary">View projects</a>
+        <a href="#contact" class="btn btn-ghost">Get in touch</a>
+      </div>
+
+      <div class="query-card">
+        <div class="query-head">
+          <span class="d k"></span><span class="d r"></span><span class="d"></span>
+          <span>query · engineers.sql</span>
+        </div>
+        <div class="query-body">
+<span class="kw">SELECT</span> name, focus, <span class="fn">status</span>()<br>
+<span class="kw">FROM</span> engineers<br>
+<span class="kw">WHERE</span> reliability = <span class="str">'high'</span><br>
+&nbsp;&nbsp;<span class="kw">AND</span> data_integrity = <span class="str">'guaranteed'</span><br>
+<span class="kw">ORDER BY</span> ownership <span class="kw">DESC</span>;
+          <div class="result">
+            <span class="cm mono">-- 1 row returned</span><br>
+            <b>Abdallah</b> · SQL Server, ETL, data modeling · <b>available for hire</b>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ABOUT -->
+  <section id="about">
+    <div class="wrap">
+      <div class="sec-label"><span class="n">01</span> / about</div>
+      <h2>Who's behind the schema</h2>
+      <div class="about-grid reveal">
+        <div>
+          <p>I graduated in <strong>Computer Science</strong> from Yanbu Industrial College on a Database Administration track, then spent a <strong>28-week co-op</strong> at the Industrial Research &amp; Development Agency (RCJY) working close to real production systems.</p>
+          <p>My comfort zone is the relational world: <strong>SQL Server</strong> and MySQL, schema design, normalization, indexing, and query optimization. Right now I'm extending into <strong>PostgreSQL, Linux, Python, and cloud data tooling</strong> — the skills that turn a DBA into a data engineer.</p>
+          <p>I like problems where correctness matters: access control, approval workflows, and data that has to stay consistent under pressure. If a system quietly does the right thing every time, I've done my job.</p>
+        </div>
+        <div class="facts">
+          <div class="fact"><span class="k">location</span><span class="v">Yanbu, Saudi Arabia</span></div>
+          <div class="fact"><span class="k">degree</span><span class="v">B.Sc. Computer Science</span></div>
+          <div class="fact"><span class="k">track</span><span class="v">Database Administration</span></div>
+          <div class="fact"><span class="k">experience</span><span class="v">28-week co-op · RCJY</span></div>
+          <div class="fact"><span class="k">focus</span><span class="v">DBA → Data Engineer</span></div>
+          <div class="fact"><span class="k">languages</span><span class="v">Arabic · English</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SKILLS -->
+  <section id="skills">
+    <div class="wrap">
+      <div class="sec-label"><span class="n">02</span> / skills</div>
+      <h2>The toolset, by table</h2>
+      <div class="skills-grid">
+
+        <div class="skill-table reveal">
+          <div class="skill-head"><span class="ico">▸</span> databases</div>
+          <div class="skill-body">
+            <div class="skill-row"><span class="pk">PK</span> SQL Server</div>
+            <div class="skill-row"><span class="pk">PK</span> MySQL</div>
+            <div class="skill-row"><span class="fk">FK</span> PostgreSQL</div>
+            <div class="skill-row"><span class="fk">FK</span> Oracle basics</div>
+          </div>
+        </div>
+
+        <div class="skill-table reveal">
+          <div class="skill-head"><span class="ico">▸</span> core_dba</div>
+          <div class="skill-body">
+            <div class="skill-row"><span class="pk">PK</span> T-SQL / queries</div>
+            <div class="skill-row"><span class="pk">PK</span> Data modeling / ERD</div>
+            <div class="skill-row"><span class="pk">PK</span> Normalization</div>
+            <div class="skill-row"><span class="pk">PK</span> Indexing &amp; tuning</div>
+          </div>
+        </div>
+
+        <div class="skill-table reveal">
+          <div class="skill-head"><span class="ico">▸</span> data_engineering</div>
+          <div class="skill-body">
+            <div class="skill-row"><span class="fk">FK</span> ETL pipelines</div>
+            <div class="skill-row"><span class="fk">FK</span> Python</div>
+            <div class="skill-row"><span class="fk">FK</span> Data warehousing</div>
+            <div class="skill-row"><span class="fk">FK</span> Cloud (Azure)</div>
+          </div>
+        </div>
+
+        <div class="skill-table reveal">
+          <div class="skill-head"><span class="ico">▸</span> development</div>
+          <div class="skill-body">
+            <div class="skill-row"><span class="pk">PK</span> PHP</div>
+            <div class="skill-row"><span class="fk">FK</span> Security (PDO/bcrypt/CSRF)</div>
+            <div class="skill-row"><span class="fk">FK</span> REST basics</div>
+          </div>
+        </div>
+
+        <div class="skill-table reveal">
+          <div class="skill-head"><span class="ico">▸</span> tools</div>
+          <div class="skill-body">
+            <div class="skill-row"><span class="pk">PK</span> Git / GitHub</div>
+            <div class="skill-row"><span class="fk">FK</span> Linux</div>
+            <div class="skill-row"><span class="fk">FK</span> SSMS</div>
+            <div class="skill-row"><span class="fk">FK</span> Power BI basics</div>
+          </div>
+        </div>
+
+        <div class="skill-table reveal">
+          <div class="skill-head"><span class="ico">▸</span> foundations</div>
+          <div class="skill-body">
+            <div class="skill-row"><span class="pk">PK</span> ACID properties</div>
+            <div class="skill-row"><span class="pk">PK</span> Transactions</div>
+            <div class="skill-row"><span class="pk">PK</span> Backup &amp; recovery</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- PROJECTS -->
+  <section id="projects">
+    <div class="wrap">
+      <div class="sec-label"><span class="n">03</span> / projects</div>
+      <h2>Selected work</h2>
+
+      <div class="proj reveal">
+        <div class="proj-head">
+          <span class="tbl">▤</span> weekly_reports_management_system
+          <span class="badge">graduation project</span>
+        </div>
+        <div class="proj-body">
+          <h3>Weekly Reports Management System</h3>
+          <p>A role-based reporting platform built during my co-op: employees submit weekly reports, supervisors review and approve them through a controlled workflow, and every action is scoped by permission. Designed for correctness and security from the schema up.</p>
+          <div class="proj-meta">
+            <div class="m"><div class="num">8</div><div class="lbl">TABLES</div></div>
+            <div class="m"><div class="num">5</div><div class="lbl">USER ROLES</div></div>
+            <div class="m"><div class="num">RBAC</div><div class="lbl">ACCESS CONTROL</div></div>
+          </div>
+          <div class="tags">
+            <span class="tag">PHP</span><span class="tag">MySQL</span><span class="tag">PDO</span>
+            <span class="tag">bcrypt</span><span class="tag">CSRF protection</span><span class="tag">Approval workflow</span>
+          </div>
+          <div class="proj-links">
+            <a href="#" target="_blank" rel="noopener">→ View code</a>
+            <a href="#" target="_blank" rel="noopener">→ Schema / ERD</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="proj reveal">
+        <div class="proj-head">
+          <span class="tbl">▤</span> etl_pipeline_demo
+          <span class="badge">data engineering</span>
+        </div>
+        <div class="proj-body">
+          <h3>ETL Pipeline — extract, clean, load</h3>
+          <p>A compact pipeline that pulls raw data from source files, validates and cleans it in Python, and loads it into a structured database — with logging and basic data-quality checks. Built to demonstrate the data-engineering half of my skill set.</p>
+          <div class="proj-meta">
+            <div class="m"><div class="num">3</div><div class="lbl">STAGES</div></div>
+            <div class="m"><div class="num">Python</div><div class="lbl">TRANSFORM</div></div>
+            <div class="m"><div class="num">SQL</div><div class="lbl">LOAD</div></div>
+          </div>
+          <div class="tags">
+            <span class="tag">Python</span><span class="tag">pandas</span><span class="tag">SQL</span>
+            <span class="tag">Data cleaning</span><span class="tag">Logging</span>
+          </div>
+          <div class="proj-links">
+            <a href="#" target="_blank" rel="noopener">→ View code</a>
+            <a href="#" target="_blank" rel="noopener">→ Read the write-up</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="proj reveal">
+        <div class="proj-head">
+          <span class="tbl">▤</span> sql_query_library
+          <span class="badge">reference</span>
+        </div>
+        <div class="proj-body">
+          <h3>SQL Query &amp; Optimization Library</h3>
+          <p>A curated collection of real SQL: complex joins, window functions, stored procedures, and before/after examples of query optimization and indexing. A working reference that doubles as proof of depth.</p>
+          <div class="proj-meta">
+            <div class="m"><div class="num">30+</div><div class="lbl">QUERIES</div></div>
+            <div class="m"><div class="num">T-SQL</div><div class="lbl">DIALECT</div></div>
+            <div class="m"><div class="num">Tuning</div><div class="lbl">FOCUS</div></div>
+          </div>
+          <div class="tags">
+            <span class="tag">T-SQL</span><span class="tag">Stored procedures</span><span class="tag">Window functions</span>
+            <span class="tag">Indexing</span><span class="tag">Execution plans</span>
+          </div>
+          <div class="proj-links">
+            <a href="#" target="_blank" rel="noopener">→ Browse the library</a>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- CERTIFICATIONS -->
+  <section id="certs">
+    <div class="wrap">
+      <div class="sec-label"><span class="n">04</span> / certifications</div>
+      <h2>Learning path</h2>
+      <div class="cert-grid">
+        <div class="cert reveal">
+          <span class="st prog"></span>
+          <div class="txt"><div class="name">Microsoft DP-900</div><div class="desc">Azure Data Fundamentals</div></div>
+          <div class="state">in progress</div>
+        </div>
+        <div class="cert reveal">
+          <span class="st plan"></span>
+          <div class="txt"><div class="name">Microsoft DP-300</div><div class="desc">Azure Database Administrator Associate</div></div>
+          <div class="state">planned</div>
+        </div>
+        <div class="cert reveal">
+          <span class="st done"></span>
+          <div class="txt"><div class="name">Data Engineering Bootcamp</div><div class="desc">SDA · SQL, Python, Linux, Git</div></div>
+          <div class="state">enrolled</div>
+        </div>
+        <div class="cert reveal">
+          <span class="st done"></span>
+          <div class="txt"><div class="name">B.Sc. Computer Science</div><div class="desc">Yanbu Industrial College · DBA track</div></div>
+          <div class="state">completed</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section id="contact" class="contact">
+    <div class="wrap">
+      <div class="sec-label" style="text-align:center"><span class="n">05</span> / contact</div>
+      <h2>Let's talk data</h2>
+      <p>Open to Database Administrator and Data Engineer roles across Saudi Arabia. The fastest way to reach me is below.</p>
+      <div class="contact-links">
+        <a href="mailto:your.email@example.com" class="btn btn-primary">Email me</a>
+        <a href="https://linkedin.com/in/your-profile" target="_blank" rel="noopener" class="btn btn-ghost">LinkedIn</a>
+        <a href="https://github.com/your-username" target="_blank" rel="noopener" class="btn btn-ghost">GitHub</a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap mono">-- built &amp; maintained by Abdallah · <span id="yr"></span></div>
+</footer>
+
+<script>
+  document.getElementById('yr').textContent = new Date().getFullYear();
+
+  // scroll reveal
+  const io = new IntersectionObserver((entries)=>{
+    entries.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target);} });
+  },{threshold:.12});
+  document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+</script>
+</body>
+</html>
